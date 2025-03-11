@@ -43,7 +43,15 @@ enum Cheatsheet {
           }
           KeyBadge(key: action.key ?? "●")
 
-          if action.type == .application && showAppIcons {
+          if action.type == .url && showAppIcons {
+            AsyncImage(url: URL(string: FavIcon(action.value)[iconSize.width])) {
+              image in
+              image.resizable().scaledToFill().padding(4)
+            } placeholder: {
+              Image(systemName: icon)
+                .foregroundStyle(.secondary)
+            }.frame(width: iconSize.width, height: iconSize.height, alignment: .center)
+          } else if action.type == .application && showAppIcons {
             AppIconImage(appPath: action.value, size: iconSize)
           } else {
             Image(systemName: icon)
@@ -198,6 +206,17 @@ struct CheatsheetView_Previews: PreviewProvider {
   static var previews: some View {
     Cheatsheet.CheatsheetView()
       .environmentObject(UserState(userConfig: UserConfig()))
+  }
+}
+struct FavIcon {
+  let size: CGFloat
+  private let domain: String
+  init(_ domain: String, size: CGFloat = 16) {
+    self.domain = domain
+    self.size = size
+  }
+  subscript(_ size: CGFloat) -> String {
+    "https://www.google.com/s2/favicons?sz=64&domain=\(domain)"
   }
 }
 
