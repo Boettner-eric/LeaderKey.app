@@ -44,13 +44,7 @@ enum Cheatsheet {
           KeyBadge(key: action.key ?? "●")
 
           if action.type == .url && showAppIcons {
-            AsyncImage(url: URL(string: FavIcon(action.value)[iconSize.width])) {
-              image in
-              image.resizable().scaledToFill().padding(4)
-            } placeholder: {
-              Image(systemName: icon)
-                .foregroundStyle(.secondary)
-            }.frame(width: iconSize.width, height: iconSize.height, alignment: .center)
+            FavIconImage(url: action.value, icon: icon, size: iconSize)
           } else if action.type == .application && showAppIcons {
             AppIconImage(appPath: action.value, size: iconSize)
           } else {
@@ -208,17 +202,6 @@ struct CheatsheetView_Previews: PreviewProvider {
       .environmentObject(UserState(userConfig: UserConfig()))
   }
 }
-struct FavIcon {
-  let size: CGFloat
-  private let domain: String
-  init(_ domain: String, size: CGFloat = 16) {
-    self.domain = domain
-    self.size = size
-  }
-  subscript(_ size: CGFloat) -> String {
-    "https://www.google.com/s2/favicons?sz=64&domain=\(domain)"
-  }
-}
 
 struct AppIconImage: View {
   let appPath: String
@@ -254,6 +237,30 @@ struct AppIconImage: View {
       return true
     }
     return resizedIcon
+  }
+}
+
+struct FavIconImage: View {
+  let url: String
+  let icon: String
+  let size: NSSize
+
+  init(url: String, icon: String, size: NSSize = NSSize(width: 24, height: 24)) {
+    self.url = "https://www.google.com/s2/favicons?sz=128&domain=\(url)"
+    self.size = size
+    self.icon = icon
+  }
+
+  var body: some View {
+    let image =
+      AsyncImage(url: URL(string: url)) {
+        image in
+        image.resizable().scaledToFill().padding(4)
+      } placeholder: {
+        Image(systemName: icon)
+          .foregroundStyle(.secondary)
+      }
+    image.frame(width: size.width, height: size.height, alignment: .center)
   }
 }
 
