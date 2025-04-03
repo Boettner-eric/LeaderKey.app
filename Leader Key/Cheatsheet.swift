@@ -1,4 +1,5 @@
 import Defaults
+import Kingfisher
 import SwiftUI
 
 enum Cheatsheet {
@@ -252,15 +253,11 @@ struct FavIconImage: View {
   }
 
   var body: some View {
-    let image =
-      AsyncImage(url: URL(string: url)) {
-        image in
-        image.resizable().scaledToFill().padding(4)
-      } placeholder: {
-        Image(systemName: icon)
-          .foregroundStyle(.secondary)
-      }
-    image.frame(width: size.width, height: size.height, alignment: .center)
+    KFImage.url(URL(string: url)).placeholder({
+      Image(systemName: icon).foregroundStyle(.secondary)
+    }).resizable()
+      .padding(4)
+      .frame(width: size.width, height: size.height, alignment: .center)
   }
 }
 
