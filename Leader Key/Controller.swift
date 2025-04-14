@@ -216,13 +216,13 @@ class Controller {
     // Handle arrow keys
     switch event.keyCode {
     case KeyHelpers.upArrow.rawValue:
-      return "\u{2191}"  // ↑
+      return "↑"
     case KeyHelpers.downArrow.rawValue:
-      return "\u{2193}"  // ↓
+      return "↓"
     case KeyHelpers.leftArrow.rawValue:
-      return "\u{2190}"  // ←
+      return "←"
     case KeyHelpers.rightArrow.rawValue:
-      return "\u{2192}"  // →
+      return "→"
     default:
       return event.charactersIgnoringModifiers
     }
