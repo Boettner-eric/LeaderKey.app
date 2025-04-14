@@ -9,6 +9,10 @@ enum KeyHelpers: UInt16 {
   case space = 49
   case backspace = 51
   case escape = 53
+  case upArrow = 126
+  case downArrow = 125
+  case leftArrow = 123
+  case rightArrow = 124
 }
 
 class Controller {
@@ -209,7 +213,19 @@ class Controller {
       }
     }
 
-    return event.charactersIgnoringModifiers
+    // Handle arrow keys
+    switch event.keyCode {
+    case KeyHelpers.upArrow.rawValue:
+      return "\u{2191}"  // ↑
+    case KeyHelpers.downArrow.rawValue:
+      return "\u{2193}"  // ↓
+    case KeyHelpers.leftArrow.rawValue:
+      return "\u{2190}"  // ←
+    case KeyHelpers.rightArrow.rawValue:
+      return "\u{2192}"  // →
+    default:
+      return event.charactersIgnoringModifiers
+    }
   }
 
   private func positionCheatsheetWindow() {

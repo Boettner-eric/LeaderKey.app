@@ -325,7 +325,15 @@ enum ActionOrGroup: Codable, Equatable {
     var container = encoder.container(keyedBy: CodingKeys.self)
     switch self {
     case .action(let action):
-      try container.encode(action.key, forKey: .key)
+      if let key = action.key {
+        switch key {
+        case "↑": try container.encode("\u{2191}", forKey: .key)
+        case "↓": try container.encode("\u{2193}", forKey: .key)
+        case "←": try container.encode("\u{2190}", forKey: .key)
+        case "→": try container.encode("\u{2192}", forKey: .key)
+        default: try container.encode(key, forKey: .key)
+        }
+      }
       try container.encode(action.type, forKey: .type)
       try container.encode(action.value, forKey: .value)
       if action.label != nil && !action.label!.isEmpty {
@@ -333,7 +341,16 @@ enum ActionOrGroup: Codable, Equatable {
       }
       try container.encodeIfPresent(action.iconPath, forKey: .iconPath)
     case .group(let group):
-      try container.encode(group.key, forKey: .key)
+      // Handle key encoding with special case for arrow keys
+      if let key = group.key {
+        switch key {
+        case "↑": try container.encode("\u{2191}", forKey: .key)
+        case "↓": try container.encode("\u{2193}", forKey: .key)
+        case "←": try container.encode("\u{2190}", forKey: .key)
+        case "→": try container.encode("\u{2192}", forKey: .key)
+        default: try container.encode(key, forKey: .key)
+        }
+      }
       try container.encode(Type.group, forKey: .type)
       try container.encode(group.actions, forKey: .actions)
       if group.label != nil && !group.label!.isEmpty {
