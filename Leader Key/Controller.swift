@@ -213,8 +213,10 @@ class Controller {
       }
     }
 
-    // Handle arrow keys
+    // Handle special keys
     switch event.keyCode {
+    case KeyHelpers.enter.rawValue:
+      return "↵"
     case KeyHelpers.upArrow.rawValue:
       return "↑"
     case KeyHelpers.downArrow.rawValue:
