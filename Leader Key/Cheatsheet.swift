@@ -23,18 +23,8 @@ enum Cheatsheet {
   struct ActionRow: SwiftUI.View {
     let action: Action
     let indent: Int
-    @Default(.showAppIconsInCheatsheet) var showAppIcons
     @Default(.showDetailsInCheatsheet) var showDetails
-
-    var icon: String {
-      switch action.type {
-      case .application: return "macwindow"
-      case .url: return "link"
-      case .command: return "terminal"
-      case .folder: return "folder"
-      default: return "questionmark"
-      }
-    }
+    @Default(.showAppIconsInCheatsheet) var showIcons
 
     var body: some SwiftUI.View {
       HStack {
@@ -44,14 +34,8 @@ enum Cheatsheet {
           }
           KeyBadge(key: action.key ?? "●")
 
-          if action.type == .url && showAppIcons {
-            FavIconImage(url: action.value, icon: icon, size: iconSize)
-          } else if action.type == .application && showAppIcons {
-            AppIconImage(appPath: action.value, size: iconSize)
-          } else {
-            Image(systemName: icon)
-              .foregroundStyle(.secondary)
-              .frame(width: iconSize.width, height: iconSize.height, alignment: .center)
+          if showIcons {
+            actionIcon(item: ActionOrGroup.action(action), iconSize: iconSize)
           }
 
           Text(action.displayName)
@@ -72,6 +56,8 @@ enum Cheatsheet {
   struct GroupRow: SwiftUI.View {
     @Default(.expandGroupsInCheatsheet) var expand
     @Default(.showDetailsInCheatsheet) var showDetails
+    @Default(.showAppIconsInCheatsheet) var showIcons
+
     let group: Group
     let indent: Int
 
@@ -82,10 +68,16 @@ enum Cheatsheet {
             Text("  ")
           }
           KeyBadge(key: group.key ?? "")
-          Image(systemName: "folder")
+
+          if showIcons {
+            actionIcon(item: ActionOrGroup.group(group), iconSize: iconSize)
+          }
+
+          Image(systemName: "chevron.right")
             .foregroundStyle(.secondary)
-            .frame(width: iconSize.width, height: iconSize.height, alignment: .center)
+
           Text(group.displayName)
+
           Spacer()
           if showDetails {
             Text("\(group.actions.count.description) item(s)")
